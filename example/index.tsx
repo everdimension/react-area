@@ -10,16 +10,16 @@ const App = () => {
       <h2>App testing</h2>
       <div style={{ border: '2px solid', margin: 20, padding: 10 }}>
         <h3>First area</h3>
-        <RenderArea areaId="one" />
+        <RenderArea name="one" />
       </div>
-      <Content areaId="one">
+      <Content name="one">
         <p>hello</p>
       </Content>
-      <Content areaId="one">
+      <Content name="one">
         <p>world</p>
       </Content>
       <div style={{ border: '2px solid', margin: 20, padding: 10 }}>
-        <RenderArea areaId="two">
+        <RenderArea name="two">
           {components => (
             <>
               <h3>Second area: {components.length} elements rendered</h3>
@@ -31,19 +31,19 @@ const App = () => {
       </div>
 
       <div>
-        <Content areaId="two">
+        <Content name="two">
           just text
           <p>world</p>
         </Content>
-        <Content areaId="two">
+        <Content name="two">
           <div>This should be first</div>
         </Content>
         {show ? (
-          <Content areaId="two">
+          <Content name="two">
             <div>This should be second</div>
           </Content>
         ) : null}
-        <Content areaId="two">
+        <Content name="two">
           <div>This should be last</div>
         </Content>
       </div>

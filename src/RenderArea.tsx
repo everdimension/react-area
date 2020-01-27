@@ -6,14 +6,14 @@ const { useContext } = React;
 type RenderCallback = (components: React.ReactElement[]) => React.ReactNode;
 
 interface Props {
-  areaId: string;
+  name: string;
   children?: React.ReactNode | RenderCallback;
 }
 
 const EMPTY_ARRAY = [] as React.ReactElement[];
 
 export const RenderArea: React.FunctionComponent<Props> = ({
-  areaId,
+  name: areaId,
   children,
 }) => {
   const context = useContext<typeof AreaContext>(AreaContext);

@@ -32,8 +32,8 @@ export function useRender(areaId: string, children: React.ReactNode) {
   }, [children]);
 }
 
-export const Content: React.FunctionComponent<{ areaId: string }> = ({
-  areaId,
+export const Content: React.FunctionComponent<{ name: string }> = ({
+  name: areaId,
   children,
 }) => {
   useRender(areaId, children);
