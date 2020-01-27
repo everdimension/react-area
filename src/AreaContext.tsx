@@ -1,20 +1,11 @@
-import React from 'react';
-
-const {
-  useState,
-  // useContext,
-  useCallback,
-  useMemo,
-  // useLayoutEffect,
-  // useEffect,
-} = React;
+import React, { useState, useCallback, useMemo } from 'react';
 
 interface ComponentHolder {
   value: React.ReactElement;
   orderNumber: number | null;
 }
 
-interface SubtreeContextValue {
+interface AreaContextValue {
   addComponent: (areaId: string | number, component: ComponentHolder) => void;
   removeComponent: (
     areaId: string | number,
@@ -27,7 +18,7 @@ interface SubtreeContextValue {
   getComponents: (areaId: string) => React.ReactElement[] | null;
 }
 
-export const SubtreeContext = React.createContext<SubtreeContextValue>({
+export const AreaContext = React.createContext<AreaContextValue>({
   // @ts-ignore
   addComponent: (areaId: string, component: ComponentHolder) => {},
   // @ts-ignore
@@ -38,7 +29,7 @@ export const SubtreeContext = React.createContext<SubtreeContextValue>({
   getComponents: (areaId: string) => null,
 });
 
-export function SubtreeProvider(props: React.Props<any>) {
+export function AreaProvider(props: React.Props<any>) {
   const [components, setComponents] = useState<{
     [key: string]: Set<ComponentHolder>;
   }>({});
@@ -104,5 +95,5 @@ export function SubtreeProvider(props: React.Props<any>) {
     [addComponent, getComponents, removeComponent, updateComponent],
   );
 
-  return <SubtreeContext.Provider {...props} value={value} />;
+  return <AreaContext.Provider {...props} value={value} />;
 }

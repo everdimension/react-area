@@ -1,15 +1,15 @@
 import React from 'react';
-import { SubtreeProvider } from './Subtree';
-import { RenderingArea } from './RenderingArea';
-import { RenderToArea } from './RenderToArea';
+import { AreaProvider } from './AreaContext';
+import { RenderArea } from './RenderArea';
+import { Content } from './Content';
 
-export { SubtreeProvider, RenderingArea, RenderToArea };
+export { AreaProvider, RenderArea, Content };
 
 export function createRenderingPair(areaId: string) {
-  const pair = {} as { RenderingArea: React.FC; RenderToArea: React.FC };
-  pair.RenderingArea = props => <RenderingArea {...props} areaId={areaId} />;
-  pair.RenderToArea = ({ children }) => (
-    <RenderToArea areaId={areaId}>{children}</RenderToArea>
+  const pair = {} as { RenderArea: React.FC; Content: React.FC };
+  pair.RenderArea = props => <RenderArea {...props} areaId={areaId} />;
+  pair.Content = ({ children }) => (
+    <Content areaId={areaId}>{children}</Content>
   );
   return pair;
 }

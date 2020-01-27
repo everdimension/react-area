@@ -1,5 +1,5 @@
 import React from 'react';
-import { SubtreeContext } from './Subtree';
+import { AreaContext } from './AreaContext';
 
 const { useEffect, useContext, useRef } = React;
 
@@ -12,7 +12,7 @@ interface ComponentData {
 
 export function useRender(areaId: string, children: React.ReactNode) {
   const { addComponent, removeComponent, updateComponent } = useContext(
-    SubtreeContext,
+    AreaContext,
   );
   const ref = useRef<ComponentData>({ value: children, orderNumber: null });
 
@@ -32,7 +32,7 @@ export function useRender(areaId: string, children: React.ReactNode) {
   }, [children]);
 }
 
-export const RenderToArea: React.FunctionComponent<{ areaId: string }> = ({
+export const Content: React.FunctionComponent<{ areaId: string }> = ({
   areaId,
   children,
 }) => {
