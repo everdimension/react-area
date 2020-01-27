@@ -16,7 +16,9 @@ export function useRender(areaId: string, children: React.ReactNode) {
   );
   const ref = useRef<ComponentData>({ value: children, orderNumber: null });
 
-  ref.current.orderNumber = orderNumber;
+  if (ref.current.orderNumber == null) {
+    ref.current.orderNumber = orderNumber;
+  }
   orderNumber += 1;
 
   useEffect(() => {
