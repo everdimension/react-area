@@ -41,6 +41,10 @@
     "tslib": "^1.10.0",
     "typescript": "^3.7.5"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/everdimension/react-area.git"
+  },
   "keywords": [
     "ui area",
     "ui region",
