@@ -53,6 +53,7 @@
     "plugins",
     "pluggable ui",
     "slot fill",
+    "react-area",
     "react"
   ]
 }
