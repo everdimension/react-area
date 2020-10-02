@@ -2,6 +2,10 @@ import * as React from 'react';
 import { useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import { AreaProvider, RenderArea, Content } from '../.';
+import { Layout } from './LayoutApp/Layout';
+import { Feature1 } from './LayoutApp/Feature1';
+import { Feature2 } from './LayoutApp/Feature2';
+import { TestComponent } from './TestComponent';
 
 const App = () => {
   const [show, setShow] = useState(false);
@@ -38,14 +42,37 @@ const App = () => {
         <Content name="two">
           <div>This should be first</div>
         </Content>
-        {show ? (
-          <Content name="two">
-            <div>This should be second</div>
-          </Content>
-        ) : null}
+        <Content name="two">
+          {show ? <div>This should be second</div> : null}
+        </Content>
         <Content name="two">
           <div>This should be last</div>
         </Content>
+      </div>
+
+      <div style={{ border: '2px solid magenta' }}>
+        <RenderArea name="three" />
+      </div>
+
+      <div>
+        <Content name="three">
+          <TestComponent name="test1">
+            test1 test3; prev visible: {String(show)}
+          </TestComponent>
+        </Content>
+        <Content name="three">
+          <TestComponent name="test2">test2</TestComponent>
+        </Content>
+        <Content name="three">
+          <TestComponent name="test3">
+            test3; prev visible: {String(show)}
+          </TestComponent>
+        </Content>
+      </div>
+      <div>
+        <Layout />
+        <Feature1 />
+        <Feature2 />
       </div>
     </AreaProvider>
   );
