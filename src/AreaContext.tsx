@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 
 interface ComponentHolder {
   value: React.ReactElement;
@@ -16,6 +16,9 @@ interface AreaContextValue {
     component: ComponentHolder,
   ) => void;
   getComponents: (areaId: string) => React.ReactElement[] | null;
+  orderNumberRef: {
+    current: number;
+  };
 }
 
 export const AreaContext = React.createContext<AreaContextValue>({
@@ -27,6 +30,7 @@ export const AreaContext = React.createContext<AreaContextValue>({
   updateComponent: (areaId: string, component: ComponentHolder) => {},
   // @ts-ignore
   getComponents: (areaId: string) => null,
+  orderNumberRef: { current: 0 },
 });
 
 export function AreaProvider(props: React.Props<any>) {
@@ -90,8 +94,16 @@ export function AreaProvider(props: React.Props<any>) {
     [components],
   );
 
+  const orderNumberRef = useRef(0);
+
   const value = useMemo(
-    () => ({ addComponent, getComponents, removeComponent, updateComponent }),
+    () => ({
+      addComponent,
+      getComponents,
+      removeComponent,
+      updateComponent,
+      orderNumberRef,
+    }),
     [addComponent, getComponents, removeComponent, updateComponent],
   );
 
