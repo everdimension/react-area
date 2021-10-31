@@ -3,23 +3,24 @@ import { AreaContext } from './AreaContext';
 
 const { useEffect, useContext, useRef } = React;
 
-let orderNumber = 0;
-
 interface ComponentData {
   value: React.ReactNode;
   orderNumber: number | null;
 }
 
 export function useRender(areaId: string, children: React.ReactNode) {
-  const { addComponent, removeComponent, updateComponent } = useContext(
-    AreaContext,
-  );
+  const {
+    addComponent,
+    removeComponent,
+    updateComponent,
+    orderNumberRef,
+  } = useContext(AreaContext);
   const ref = useRef<ComponentData>({ value: children, orderNumber: null });
 
   if (ref.current.orderNumber == null) {
-    ref.current.orderNumber = orderNumber;
+    ref.current.orderNumber = orderNumberRef.current;
   }
-  orderNumber += 1;
+  orderNumberRef.current += 1;
 
   useEffect(() => {
     addComponent(areaId, ref.current);
