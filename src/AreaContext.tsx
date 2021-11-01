@@ -5,7 +5,7 @@ interface ComponentHolder {
   orderNumber: number | null;
 }
 
-interface AreaContextValue {
+export interface AreaContextValue {
   addComponent: (areaId: string | number, component: ComponentHolder) => void;
   removeComponent: (
     areaId: string | number,

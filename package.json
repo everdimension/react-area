@@ -1,17 +1,20 @@
 {
   "version": "0.1.1-alpha.3",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "type": "module",
+  "source": "src/index.tsx",
+  "exports": {
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.modern.js"
+  },
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.module.js",
+  "unpkg": "./dist/index.umd.js",
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build"
+    "build": "microbundle --jsx React.createElement",
+    "dev": "microbundle watch",
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "react": ">=16"
@@ -29,17 +32,16 @@
   },
   "name": "react-area",
   "author": "everdimension <everdimension@gmail.com>",
-  "module": "dist/react-area.esm.js",
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
     "husky": "^4.2.1",
+    "microbundle": "^0.14.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "tsdx": "^0.12.3",
     "tslib": "^1.10.0",
-    "typescript": "^4.0.5"
+    "typescript": "^4.4.4"
   },
   "repository": {
     "type": "git",
