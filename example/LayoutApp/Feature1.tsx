@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Content } from '../../.';
+import { Content } from '../../src';
 import { TestComponent } from '../TestComponent';
 
 export const Feature1: React.FunctionComponent<{}> = () => {

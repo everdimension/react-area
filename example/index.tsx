@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import * as ReactDOM from 'react-dom';
-import { AreaProvider, RenderArea, Content } from '../.';
+import { AreaProvider, RenderArea, Content } from '../src/index';
 import { Layout } from './LayoutApp/Layout';
 import { Feature1 } from './LayoutApp/Feature1';
 import { Feature2 } from './LayoutApp/Feature2';
@@ -24,7 +24,7 @@ const App = () => {
       </Content>
       <div style={{ border: '2px solid', margin: 20, padding: 10 }}>
         <RenderArea name="two">
-          {components => (
+          {(components) => (
             <>
               <h3>Second area: {components.length} elements rendered</h3>
               <button onClick={() => setShow(!show)}>toggle content</button>
