@@ -4,11 +4,11 @@ import { AreaContext } from './AreaContext';
 const { useEffect, useContext, useRef } = React;
 
 interface ComponentData {
-  value: React.ReactNode;
+  value: React.ReactElement;
   orderNumber: number | null;
 }
 
-export function useRender(areaId: string, children: React.ReactNode) {
+export function useRender(areaId: string, children: React.ReactElement) {
   const {
     addComponent,
     removeComponent,
@@ -39,6 +39,6 @@ export const Content: React.FunctionComponent<{ name: string }> = ({
   name: areaId,
   children,
 }) => {
-  useRender(areaId, children);
+  useRender(areaId, children as React.ReactElement);
   return null;
 };
