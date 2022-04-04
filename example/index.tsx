@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { AreaProvider, RenderArea, Content } from '../src/index';
 import { Layout } from './LayoutApp/Layout';
 import { Feature1 } from './LayoutApp/Feature1';
@@ -8,13 +8,18 @@ import { Feature2 } from './LayoutApp/Feature2';
 import { TestComponent } from './TestComponent';
 
 const App = () => {
-  const [show, setShow] = useState(false);
+  const [showArea, setShowArea] = useState(true);
+  const [show1, setShow1] = useState(true);
+  const [show2, setShow2] = useState(false);
   return (
     <AreaProvider>
       <h2>App testing</h2>
       <div style={{ border: '2px solid', margin: 20, padding: 10 }}>
-        <h3>First area</h3>
-        <RenderArea name="one" />
+        <h3>
+          First area{' '}
+          <button onClick={() => setShowArea(!showArea)}>toggle</button>
+        </h3>
+        {showArea ? <RenderArea name="one" /> : null}
       </div>
       <Content name="one">
         <p>hello</p>
@@ -27,11 +32,12 @@ const App = () => {
           {(components) => (
             <>
               <h3>Second area: {components.length} elements rendered</h3>
-              <button onClick={() => setShow(!show)}>toggle content</button>
+              <button onClick={() => setShow2(!show2)}>toggle content</button>
               {components}
             </>
           )}
         </RenderArea>
+        <button onClick={() => setShow1(!show1)}>toggle show1</button>
       </div>
 
       <div>
@@ -39,11 +45,13 @@ const App = () => {
           just text
           <p>world</p>
         </Content>
+        {show1 ? (
+          <Content name="two">
+            <div>This should be first</div>
+          </Content>
+        ) : null}
         <Content name="two">
-          <div>This should be first</div>
-        </Content>
-        <Content name="two">
-          {show ? <div>This should be second</div> : null}
+          {show2 ? <div>This should be second</div> : null}
         </Content>
         <Content name="two">
           <div>This should be last</div>
@@ -57,7 +65,7 @@ const App = () => {
       <div>
         <Content name="three">
           <TestComponent name="test1">
-            test1 test3; prev visible: {String(show)}
+            test1 test3; prev visible: {String(show2)}
           </TestComponent>
         </Content>
         <Content name="three">
@@ -65,7 +73,7 @@ const App = () => {
         </Content>
         <Content name="three">
           <TestComponent name="test3">
-            test3; prev visible: {String(show)}
+            test3; prev visible: {String(show2)}
           </TestComponent>
         </Content>
       </div>
@@ -78,4 +86,8 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
