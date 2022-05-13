@@ -33,13 +33,13 @@ export const AreaContext = React.createContext<AreaContextValue>({
   orderNumberRef: { current: 0 },
 });
 
-export function AreaProvider(props: React.Props<any>) {
+export function AreaProvider(props: { children: React.ReactNode }) {
   const [components, setComponents] = useState<{
     [key: string]: Set<ComponentHolder>;
   }>({});
 
   const addComponent = useCallback((areaId, component) => {
-    setComponents(components => {
+    setComponents((components) => {
       const existingComponents = components[areaId] || new Set();
       if (existingComponents.has(component)) {
         console.log('component has already been registererd');
@@ -54,13 +54,13 @@ export function AreaProvider(props: React.Props<any>) {
   }, []);
 
   const removeComponent = useCallback((areaId, ref) => {
-    setComponents(components => {
+    setComponents((components) => {
       const existingComponents = components[areaId];
       if (!existingComponents) {
         return components; // skip update
       }
       existingComponents.delete(ref);
-      existingComponents.forEach(component => {
+      existingComponents.forEach((component) => {
         component.orderNumber = null;
       });
       return { ...components };
@@ -68,7 +68,7 @@ export function AreaProvider(props: React.Props<any>) {
   }, []);
 
   const updateComponent = useCallback((areaId, _component) => {
-    setComponents(components => {
+    setComponents((components) => {
       const existingComponents = components[areaId];
       if (!existingComponents) {
         return components; // skip update
@@ -78,7 +78,7 @@ export function AreaProvider(props: React.Props<any>) {
   }, []);
 
   const getComponents = useCallback(
-    areaId => {
+    (areaId) => {
       if (!(areaId in components)) {
         return null;
       }
@@ -89,7 +89,7 @@ export function AreaProvider(props: React.Props<any>) {
       // position by its ".orderNumber". Perhaps we need to use an alternative
       // to Set, though.
       areaComponents.sort((a, b) => a.orderNumber! - b.orderNumber!);
-      return areaComponents.map(component => component.value);
+      return areaComponents.map((component) => component.value);
     },
     [components],
   );
