@@ -9,12 +9,8 @@ interface ComponentData {
 }
 
 export function useRender(areaId: string, children: React.ReactElement) {
-  const {
-    addComponent,
-    removeComponent,
-    updateComponent,
-    orderNumberRef,
-  } = useContext(AreaContext);
+  const { addComponent, removeComponent, updateComponent, orderNumberRef } =
+    useContext(AreaContext);
   const ref = useRef<ComponentData>({ value: children, orderNumber: null });
 
   if (ref.current.orderNumber == null) {
@@ -35,10 +31,10 @@ export function useRender(areaId: string, children: React.ReactElement) {
   }, [children]);
 }
 
-export const Content: React.FunctionComponent<{ name: string }> = ({
+export const Content = ({
   name: areaId,
   children,
-}) => {
+}: React.PropsWithChildren<{ name: string }>) => {
   useRender(areaId, children as React.ReactElement);
   return null;
 };
