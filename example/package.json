@@ -8,7 +8,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "react-router-dom": "^6.3.0"
   },
   "alias": {
     "react": "../node_modules/react",

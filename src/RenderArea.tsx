@@ -18,7 +18,9 @@ export const RenderArea: React.FunctionComponent<Props> = ({
 }) => {
   const context = useContext<AreaContextValue>(AreaContext);
   const components = context.getComponents(areaId);
-  return (typeof children === 'function'
-    ? (children as RenderCallback)(components || EMPTY_ARRAY)
-    : components) as React.ReactElement;
+  return (
+    typeof children === 'function'
+      ? (children as RenderCallback)(components || EMPTY_ARRAY)
+      : components
+  ) as React.ReactElement;
 };

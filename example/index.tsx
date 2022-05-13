@@ -6,13 +6,21 @@ import { Layout } from './LayoutApp/Layout';
 import { Feature1 } from './LayoutApp/Feature1';
 import { Feature2 } from './LayoutApp/Feature2';
 import { TestComponent } from './TestComponent';
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 
-const App = () => {
+function Main() {
   const [showArea, setShowArea] = useState(true);
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
+
   return (
-    <AreaProvider>
+    <div>
       <h2>App testing</h2>
       <div style={{ border: '2px solid', margin: 20, padding: 10 }}>
         <h3>
@@ -82,12 +90,57 @@ const App = () => {
         <Feature1 />
         <Feature2 />
       </div>
+    </div>
+  );
+}
+
+function TestRenderCallback() {
+  const { pathname } = useLocation();
+  console.log('rendering TestRenderCallback');
+  return (
+    <div>
+      <RenderArea
+        name="testRenderCallback"
+        children={(components) => {
+          console.log(pathname, components.length);
+          return <div>We have {components.length} components</div>;
+        }}
+      ></RenderArea>
+      <Routes>
+        <Route
+          path="1"
+          element={
+            <div>
+              Start <Link to="/test2/2">Go to 2</Link>
+            </div>
+          }
+        ></Route>
+        <Route
+          path="2"
+          element={
+            <div>
+              Finish
+              <Content name="testRenderCallback">content</Content>
+            </div>
+          }
+        ></Route>
+      </Routes>
+    </div>
+  );
+}
+
+const App = () => {
+  return (
+    <AreaProvider>
+      <BrowserRouter>
+        <Link to="/">Main</Link> <Link to="/test2/1">Test2...</Link>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/test2/*" element={<TestRenderCallback />} />
+        </Routes>
+      </BrowserRouter>
     </AreaProvider>
   );
 };
 
-createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+createRoot(document.getElementById('root')).render(<App />);

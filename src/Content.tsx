@@ -1,7 +1,5 @@
-import React from 'react';
+import React, { useLayoutEffect, useEffect, useContext, useRef } from 'react';
 import { AreaContext } from './AreaContext';
-
-const { useEffect, useContext, useRef } = React;
 
 interface ComponentData {
   value: React.ReactElement;
@@ -18,7 +16,7 @@ export function useRender(areaId: string, children: React.ReactElement) {
   }
   orderNumberRef.current += 1;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     addComponent(areaId, ref.current);
     return () => {
       removeComponent(areaId, ref.current);
@@ -26,8 +24,10 @@ export function useRender(areaId: string, children: React.ReactElement) {
   }, [ref.current, addComponent, removeComponent]);
 
   useEffect(() => {
-    ref.current.value = children;
-    updateComponent(areaId, ref.current);
+    if (children !== ref.current.value) {
+      ref.current.value = children;
+      updateComponent(areaId, ref.current);
+    }
   }, [children]);
 }
 
