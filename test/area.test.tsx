@@ -1,0 +1,149 @@
+import { describe, it, expect } from 'vitest';
+import { useState } from 'react';
+import { render, screen, act } from '@testing-library/react';
+import {
+  AreaProvider,
+  RenderArea,
+  Content,
+  createRenderingPair,
+} from '../src';
+
+function Slot({ name }: { name: string }) {
+  return (
+    <div data-testid={`slot-${name}`}>
+      <RenderArea name={name} />
+    </div>
+  );
+}
+
+function getSlotText(name: string) {
+  return screen.getByTestId(`slot-${name}`).textContent ?? '';
+}
+
+describe('react-area', () => {
+  it('renders Content into the matching RenderArea slot', () => {
+    render(
+      <AreaProvider>
+        <Slot name="toolbar" />
+        <Content name="toolbar">Save</Content>
+      </AreaProvider>,
+    );
+
+    expect(getSlotText('toolbar')).toBe('Save');
+  });
+
+  it('renders multiple Contents into one area in render order', () => {
+    render(
+      <AreaProvider>
+        <Slot name="toolbar" />
+        <Content name="toolbar">A</Content>
+        <Content name="toolbar">B</Content>
+        <Content name="toolbar">C</Content>
+      </AreaProvider>,
+    );
+
+    expect(getSlotText('toolbar')).toBe('ABC');
+  });
+
+  it('keeps multiple areas independent', () => {
+    render(
+      <AreaProvider>
+        <Slot name="left" />
+        <Slot name="right" />
+        <Content name="left">L</Content>
+        <Content name="right">R</Content>
+      </AreaProvider>,
+    );
+
+    expect(getSlotText('left')).toBe('L');
+    expect(getSlotText('right')).toBe('R');
+  });
+
+  it('renders nothing when no Content targets the area', () => {
+    render(
+      <AreaProvider>
+        <Slot name="empty" />
+      </AreaProvider>,
+    );
+
+    expect(getSlotText('empty')).toBe('');
+  });
+
+  it('removes Content when it unmounts', () => {
+    function Harness({ show }: { show: boolean }) {
+      return (
+        <AreaProvider>
+          <Slot name="toolbar" />
+          <Content name="toolbar">Keep</Content>
+          {show ? <Content name="toolbar">Removable</Content> : null}
+        </AreaProvider>
+      );
+    }
+
+    const { rerender } = render(<Harness show={true} />);
+    expect(getSlotText('toolbar')).toBe('KeepRemovable');
+
+    rerender(<Harness show={false} />);
+    expect(getSlotText('toolbar')).toBe('Keep');
+  });
+
+  it('re-renders the area when a Content updates its children', () => {
+    let setLabel!: (value: string) => void;
+    function Updating() {
+      const [label, set] = useState('first');
+      setLabel = set;
+      return <Content name="toolbar">{label}</Content>;
+    }
+
+    render(
+      <AreaProvider>
+        <Slot name="toolbar" />
+        <Updating />
+      </AreaProvider>,
+    );
+
+    expect(getSlotText('toolbar')).toBe('first');
+
+    act(() => {
+      setLabel('second');
+    });
+
+    expect(getSlotText('toolbar')).toBe('second');
+  });
+
+  it('supports the render-prop form of RenderArea', () => {
+    render(
+      <AreaProvider>
+        <div data-testid="slot-list">
+          <RenderArea name="list">
+            {(components) => <ul>{components.map((c, i) => <li key={i}>{c}</li>)}</ul>}
+          </RenderArea>
+        </div>
+        <Content name="list">one</Content>
+        <Content name="list">two</Content>
+      </AreaProvider>,
+    );
+
+    const items = screen.getByTestId('slot-list').querySelectorAll('li');
+    expect(Array.from(items).map((li) => li.textContent)).toEqual([
+      'one',
+      'two',
+    ]);
+  });
+
+  it('createRenderingPair produces a bound RenderArea/Content pair', () => {
+    const { RenderArea: ToolbarArea, Content: ToolbarContent } =
+      createRenderingPair('toolbar');
+
+    render(
+      <AreaProvider>
+        <div data-testid="slot-toolbar">
+          <ToolbarArea />
+        </div>
+        <ToolbarContent>Bound</ToolbarContent>
+      </AreaProvider>,
+    );
+
+    expect(screen.getByTestId('slot-toolbar').textContent).toBe('Bound');
+  });
+});

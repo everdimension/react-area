@@ -1,12 +1,19 @@
-import React, { useLayoutEffect, useEffect, useContext, useRef } from 'react';
+import {
+  useLayoutEffect,
+  useEffect,
+  useContext,
+  useRef,
+  type PropsWithChildren,
+  type ReactElement,
+} from 'react';
 import { AreaContext } from './AreaContext';
 
 interface ComponentData {
-  value: React.ReactElement;
+  value: ReactElement;
   orderNumber: number | null;
 }
 
-export function useRender(areaId: string, children: React.ReactElement) {
+export function useRender(areaId: string, children: ReactElement) {
   const { addComponent, removeComponent, updateComponent, orderNumberRef } =
     useContext(AreaContext);
   const ref = useRef<ComponentData>({ value: children, orderNumber: null });
@@ -34,7 +41,7 @@ export function useRender(areaId: string, children: React.ReactElement) {
 export const Content = ({
   name: areaId,
   children,
-}: React.PropsWithChildren<{ name: string }>) => {
-  useRender(areaId, children as React.ReactElement);
+}: PropsWithChildren<{ name: string }>) => {
+  useRender(areaId, children as ReactElement);
   return null;
 };
