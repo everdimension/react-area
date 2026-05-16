@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { RenderArea } from '../../.';
+import { RenderArea } from '../../src';
 
 export function Layout() {
   return (

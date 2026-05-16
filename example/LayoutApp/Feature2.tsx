@@ -1,9 +1,8 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { Content, RenderArea } from '../../src';
 import { TestComponent } from '../TestComponent';
 
-export const Feature2: React.FunctionComponent<{}> = () => {
+export function Feature2() {
   const [enabled, setEnabled] = useState(true);
   return (
     <>
@@ -30,4 +29,4 @@ export const Feature2: React.FunctionComponent<{}> = () => {
       </Content>
     </>
   );
-};
+}

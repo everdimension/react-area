@@ -20,6 +20,7 @@
     "build": "vite build && tsc --emitDeclarationOnly --declaration --outDir dist",
     "dev": "vite build --watch",
     "test": "vitest",
+    "example": "vite example",
     "prepare": "npm run build"
   },
   "peerDependencies": {
@@ -45,11 +46,13 @@
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
     "happy-dom": "^20.9.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.0",
     "typescript": "^5.9.3",
-    "vite": "^8.0.12",
+    "vite": "^8.0.11",
     "vitest": "^4.1.6"
   },
   "repository": {

@@ -1,7 +1,6 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { AreaProvider, RenderArea, Content } from '../src/index';
+import { AreaProvider, RenderArea, Content } from '../src';
 import { Layout } from './LayoutApp/Layout';
 import { Feature1 } from './LayoutApp/Feature1';
 import { Feature2 } from './LayoutApp/Feature2';
@@ -143,4 +142,8 @@ const App = () => {
   );
 };
 
-createRoot(document.getElementById('root')).render(<App />);
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Root element #root not found');
+}
+createRoot(rootElement).render(<App />);
