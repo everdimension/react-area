@@ -25,6 +25,13 @@
   "peerDependencies": {
     "react": ">=18"
   },
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": ">=11.10.0",
+      "onFail": "error"
+    }
+  },
   "prettier": {
     "printWidth": 80,
     "semi": true,
