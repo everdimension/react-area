@@ -131,6 +131,52 @@ describe('react-area', () => {
     ]);
   });
 
+  it('renders deferred Content once its RenderArea appears later', () => {
+    function Harness({ showArea }: { showArea: boolean }) {
+      return (
+        <AreaProvider>
+          {showArea ? <Slot name="late" /> : null}
+          <Content name="late">deferred</Content>
+        </AreaProvider>
+      );
+    }
+
+    const { rerender } = render(<Harness showArea={false} />);
+    expect(screen.queryByText('deferred')).toBeNull();
+
+    rerender(<Harness showArea={true} />);
+    expect(getSlotText('late')).toBe('deferred');
+  });
+
+  it('does not re-render Content output when the parent re-renders with stable children', () => {
+    let renderCount = 0;
+    function Recorder() {
+      renderCount += 1;
+      return <span>recorder</span>;
+    }
+    const stableElement = <Recorder />;
+
+    function Harness({ tick }: { tick: number }) {
+      return (
+        <AreaProvider>
+          <Slot name="x" />
+          <Content name="x">{stableElement}</Content>
+          <span data-testid="tick">{tick}</span>
+        </AreaProvider>
+      );
+    }
+
+    const { rerender } = render(<Harness tick={0} />);
+    expect(screen.getByText('recorder')).toBeTruthy();
+    const baseline = renderCount;
+
+    rerender(<Harness tick={1} />);
+    rerender(<Harness tick={2} />);
+
+    expect(screen.getByTestId('tick').textContent).toBe('2');
+    expect(renderCount).toBe(baseline);
+  });
+
   it('createRenderingPair produces a bound RenderArea/Content pair', () => {
     const { RenderArea: ToolbarArea, Content: ToolbarContent } =
       createRenderingPair('toolbar');
