@@ -4,12 +4,11 @@ import {
   useCallback,
   useMemo,
   useRef,
-  type ReactElement,
   type ReactNode,
 } from 'react';
 
 interface ComponentHolder {
-  value: ReactElement;
+  value: ReactNode;
   orderNumber: number | null;
 }
 
@@ -23,7 +22,7 @@ export interface AreaContextValue {
     areaId: string | number,
     component: ComponentHolder,
   ) => void;
-  getComponents: (areaId: string) => ReactElement[] | null;
+  getComponents: (areaId: string) => ReactNode[] | null;
   orderNumberRef: {
     current: number;
   };

@@ -4,16 +4,16 @@ import {
   useContext,
   useRef,
   type PropsWithChildren,
-  type ReactElement,
+  type ReactNode,
 } from 'react';
 import { AreaContext } from './AreaContext';
 
 interface ComponentData {
-  value: ReactElement;
+  value: ReactNode;
   orderNumber: number | null;
 }
 
-export function useRender(areaId: string, children: ReactElement) {
+export function useRender(areaId: string, children: ReactNode) {
   const { addComponent, removeComponent, updateComponent, orderNumberRef } =
     useContext(AreaContext);
   const ref = useRef<ComponentData>({ value: children, orderNumber: null });
@@ -42,6 +42,6 @@ export const Content = ({
   name: areaId,
   children,
 }: PropsWithChildren<{ name: string }>) => {
-  useRender(areaId, children as ReactElement);
+  useRender(areaId, children);
   return null;
 };
