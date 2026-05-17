@@ -12,5 +12,5 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "include": ["index.tsx", "LayoutApp", "TestComponent.tsx", "vite.config.ts"]
+  "include": ["index.tsx", "App.tsx", "components", "demos", "vite.config.ts"]
 }
