@@ -148,6 +148,46 @@ describe('react-area', () => {
     expect(getSlotText('late')).toBe('deferred');
   });
 
+  it('inserts a late-mounted Content at its tree position, not at the end', () => {
+    function Harness({ showFirst }: { showFirst: boolean }) {
+      return (
+        <AreaProvider>
+          <Slot name="toolbar" />
+          {showFirst ? <Content name="toolbar">First</Content> : null}
+          <Content name="toolbar">Second</Content>
+        </AreaProvider>
+      );
+    }
+
+    const { rerender } = render(<Harness showFirst={false} />);
+    expect(getSlotText('toolbar')).toBe('Second');
+
+    rerender(<Harness showFirst={true} />);
+    expect(getSlotText('toolbar')).toBe('FirstSecond');
+  });
+
+  it('restores tree order when a middle Content is unmounted and remounted', () => {
+    function Harness({ showMiddle }: { showMiddle: boolean }) {
+      return (
+        <AreaProvider>
+          <Slot name="toolbar" />
+          <Content name="toolbar">A</Content>
+          {showMiddle ? <Content name="toolbar">B</Content> : null}
+          <Content name="toolbar">C</Content>
+        </AreaProvider>
+      );
+    }
+
+    const { rerender } = render(<Harness showMiddle={true} />);
+    expect(getSlotText('toolbar')).toBe('ABC');
+
+    rerender(<Harness showMiddle={false} />);
+    expect(getSlotText('toolbar')).toBe('AC');
+
+    rerender(<Harness showMiddle={true} />);
+    expect(getSlotText('toolbar')).toBe('ABC');
+  });
+
   it('does not re-render Content output when the parent re-renders with stable children', () => {
     let renderCount = 0;
     function Recorder() {

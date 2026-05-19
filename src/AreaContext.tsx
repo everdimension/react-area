@@ -3,13 +3,16 @@ import {
   useState,
   useCallback,
   useMemo,
-  useRef,
   type ReactNode,
 } from 'react';
 
 interface ComponentHolder {
   value: ReactNode;
-  orderNumber: number | null;
+  /**
+   * Marker DOM node rendered at the `Content`'s position in the tree. Used to
+   * order components by document position rather than by mount timing.
+   */
+  node: Element | null;
 }
 
 export interface AreaContextValue {
@@ -23,9 +26,6 @@ export interface AreaContextValue {
     component: ComponentHolder,
   ) => void;
   getComponents: (areaId: string) => ReactNode[] | null;
-  orderNumberRef: {
-    current: number;
-  };
 }
 
 export const AreaContext = createContext<AreaContextValue>({
@@ -33,8 +33,25 @@ export const AreaContext = createContext<AreaContextValue>({
   removeComponent: () => {},
   updateComponent: () => {},
   getComponents: () => null,
-  orderNumberRef: { current: 0 },
 });
+
+/**
+ * Orders two registered components by the document position of their marker
+ * nodes, so content always renders in tree order regardless of mount timing.
+ */
+function compareDocumentOrder(a: ComponentHolder, b: ComponentHolder) {
+  if (!a.node || !b.node) {
+    return 0;
+  }
+  const position = a.node.compareDocumentPosition(b.node);
+  if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+    return -1;
+  }
+  if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+    return 1;
+  }
+  return 0;
+}
 
 export function AreaProvider(props: { children: ReactNode }) {
   const [components, setComponents] = useState<{
@@ -66,9 +83,6 @@ export function AreaProvider(props: { children: ReactNode }) {
           return components;
         }
         existingComponents.delete(ref);
-        existingComponents.forEach((component) => {
-          component.orderNumber = null;
-        });
         return { ...components };
       });
     },
@@ -94,18 +108,11 @@ export function AreaProvider(props: { children: ReactNode }) {
         return null;
       }
       const areaComponents = Array.from(components[areaId]);
-
-      // TODO:
-      // Instead of sorting, we can "insert" the component at the correct
-      // position by its ".orderNumber". Perhaps we need to use an alternative
-      // to Set, though.
-      areaComponents.sort((a, b) => a.orderNumber! - b.orderNumber!);
+      areaComponents.sort(compareDocumentOrder);
       return areaComponents.map((component) => component.value);
     },
     [components],
   );
-
-  const orderNumberRef = useRef(0);
 
   const value = useMemo(
     () => ({
@@ -113,7 +120,6 @@ export function AreaProvider(props: { children: ReactNode }) {
       getComponents,
       removeComponent,
       updateComponent,
-      orderNumberRef,
     }),
     [addComponent, getComponents, removeComponent, updateComponent],
   );

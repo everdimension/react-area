@@ -10,38 +10,42 @@ import { AreaContext } from './AreaContext';
 
 interface ComponentData {
   value: ReactNode;
-  orderNumber: number | null;
+  node: Element | null;
 }
 
 export function useRender(areaId: string, children: ReactNode) {
-  const { addComponent, removeComponent, updateComponent, orderNumberRef } =
+  const { addComponent, removeComponent, updateComponent } =
     useContext(AreaContext);
-  const ref = useRef<ComponentData>({ value: children, orderNumber: null });
-
-  if (ref.current.orderNumber == null) {
-    ref.current.orderNumber = orderNumberRef.current;
-  }
-  orderNumberRef.current += 1;
+  const markerRef = useRef<HTMLTemplateElement>(null);
+  const ref = useRef<ComponentData>({ value: children, node: null });
 
   useLayoutEffect(() => {
-    addComponent(areaId, ref.current);
+    const data = ref.current;
+    data.node = markerRef.current;
+    addComponent(areaId, data);
     return () => {
-      removeComponent(areaId, ref.current);
+      removeComponent(areaId, data);
     };
-  }, [ref.current, addComponent, removeComponent]);
+  }, [areaId, addComponent, removeComponent]);
 
   useEffect(() => {
     if (children !== ref.current.value) {
       ref.current.value = children;
       updateComponent(areaId, ref.current);
     }
-  }, [children]);
+  }, [areaId, children, updateComponent]);
+
+  return markerRef;
 }
 
 export const Content = ({
   name: areaId,
   children,
 }: PropsWithChildren<{ name: string }>) => {
-  useRender(areaId, children);
-  return null;
+  const markerRef = useRender(areaId, children);
+  // `<template>` is a script-supporting element: it renders nothing, has no
+  // layout, and is valid as a child of restrictive parents (`<table>`,
+  // `<select>`, `<ul>`, ...) where a `<span>` would not be. It exists purely
+  // as a positional marker so the area can order content by document position.
+  return <template ref={markerRef} />;
 };
